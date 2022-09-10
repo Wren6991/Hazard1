@@ -3,9 +3,6 @@
 |                     SPDX-License-Identifier: Apache-2.0                     |
 \*****************************************************************************/
 
-`ifndef _HAZARD1_RV_OPCODES_VH
-`define _HAZARD1_RV_OPCODES_VH
-
 // Instruction layout
 
 localparam RV_OPC_LSB     = 0;
@@ -28,16 +25,16 @@ localparam RV_FUNCT7_BITS = 7;
 
 // Major opcodes
 
-localparam [6:0] RV_OPC_BRANCH  = 7'b1100011
-localparam [6:0] RV_OPC_JALR    = 7'b1100111
-localparam [6:0] RV_OPC_JAL     = 7'b1101111
-localparam [6:0] RV_OPC_LUI     = 7'b0110111
-localparam [6:0] RV_OPC_AUIPC   = 7'b0010111
-localparam [6:0] RV_OPC_OP_IMM  = 7'b0010011
-localparam [6:0] RV_OPC_OP      = 7'b0110011
-localparam [6:0] RV_OPC_LOAD    = 7'b0000011
-localparam [6:0] RV_OPC_STORE   = 7'b0100011
-localparam [6:0] RV_OPC_SYSTEM  = 7'b1110011
+localparam [6:0] RV_OPC_BRANCH  = 7'b1100011;
+localparam [6:0] RV_OPC_JALR    = 7'b1100111;
+localparam [6:0] RV_OPC_JAL     = 7'b1101111;
+localparam [6:0] RV_OPC_LUI     = 7'b0110111;
+localparam [6:0] RV_OPC_AUIPC   = 7'b0010111;
+localparam [6:0] RV_OPC_OP_IMM  = 7'b0010011;
+localparam [6:0] RV_OPC_OP      = 7'b0110011;
+localparam [6:0] RV_OPC_LOAD    = 7'b0000011;
+localparam [6:0] RV_OPC_STORE   = 7'b0100011;
+localparam [6:0] RV_OPC_SYSTEM  = 7'b1110011;
 
 // Arithmetic functions
 
@@ -83,5 +80,3 @@ localparam [2:0] RV_FUNCT3_BLT  = 3'b100;
 localparam [2:0] RV_FUNCT3_BGE  = 3'b101;
 localparam [2:0] RV_FUNCT3_BLTU = 3'b110;
 localparam [2:0] RV_FUNCT3_BGEU = 3'b111;
-
-`endif

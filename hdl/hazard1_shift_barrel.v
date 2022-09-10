@@ -16,27 +16,27 @@ module hazard1_shift_barrel (
 	output reg [31:0] dout
 );
 
-reg [W_DATA-1:0] din_rev;
-reg [W_DATA-1:0] shift_accum;
+reg [31:0] din_rev;
+reg [31:0] shift_accum;
 reg              sext;
 
 always @ (*) begin: shift
 	integer i;
 
-	for (i = 0; i < W_DATA; i = i + 1)
-		din_rev[i] = right_nleft ? din[W_DATA - 1 - i] : din[i];
+	for (i = 0; i < 32; i = i + 1)
+		din_rev[i] = right_nleft ? din[32 - 1 - i] : din[i];
 
 	sext = arith && din_rev[0];
 
 	shift_accum = din_rev;
-	for (i = 0; i < W_SHAMT; i = i + 1) begin
+	for (i = 0; i < 5; i = i + 1) begin
 		if (shamt[i]) begin
-			shift_accum = (shift_accum << (1 << i)) | ({W_DATA{sext}} & ~({W_DATA{1'b1}} << (1 << i)));
+			shift_accum = (shift_accum << (1 << i)) | ({32{sext}} & ~({32{1'b1}} << (1 << i)));
 		end
 	end
 
-	for (i = 0; i < W_DATA; i = i + 1)
-		dout[i] = right_nleft ? shift_accum[W_DATA - 1 - i] : shift_accum[i];
+	for (i = 0; i < 32; i = i + 1)
+		dout[i] = right_nleft ? shift_accum[32 - 1 - i] : shift_accum[i];
 end
 
 endmodule

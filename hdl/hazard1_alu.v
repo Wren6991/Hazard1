@@ -11,15 +11,17 @@ module hazard1_alu (
 
 	input  wire [2:0]  funct3,              // instr[14:12]
 	input  wire        instr_is_branch,     // instr[6]
-	input  wire        instr_is_loadstore,  // !(instr[6] || instr[4])
 	input  wire        instr_is_rtype,      // instr[6:4] == 3'b011
 	input  wire        sub_or_arith_shift,  // instr[30]
+	input  wire        just_add,
 
 	output reg  [31:0] result,
 	output wire        cmp
 );
 
-wire sub = instr_is_branch || (instr_is_rtype && sub_or_arith_shift);
+`include "rv_opcodes.vh"
+
+wire sub = !just_add && (instr_is_branch || (instr_is_rtype && sub_or_arith_shift));
 
 // TODO this is not ideal on iCE40, creates an additional LUT layer that we
 // could have absorbed a mux into.
@@ -36,12 +38,10 @@ wire lt = op1[31] == op2[31] ? sum[31] :
 assign cmp = instr_is_branch && !funct3[2] ? rs1 == rs2 : lt;
 
 
-wire [W_DATA-1:0] shift_dout;
+wire [31:0] shift_dout;
 wire shift_right_nleft = funct3[2];
 
-hazard3_shift_barrel #(
-`include "hazard3_config_inst.vh"
-) shifter (
+hazard1_shift_barrel shifter (
 	.din         (rs1),
 	.shamt       (op2[4:0]),
 	.right_nleft (shift_right_nleft),
@@ -49,7 +49,7 @@ hazard3_shift_barrel #(
 	.dout        (shift_dout)
 );
 
-reg [W_DATA-1:0] bitwise;
+reg [31:0] bitwise;
 always @ (*) begin
 	case (funct3[1:0])
 	RV_FUNCT3_AND[1:0]: bitwise = op1 & op2;
@@ -70,6 +70,9 @@ always @ (*) begin
 	RV_FUNCT3_OR:   result = bitwise;
 	RV_FUNCT3_AND:  result = bitwise;
 	endcase
+	if (just_add) begin
+		result = sum;
+	end
 end
 
 endmodule
